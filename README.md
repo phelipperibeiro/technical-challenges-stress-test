@@ -4,13 +4,13 @@
 
 #### 1) Construa a imagem docker
 ```bash
-docker build -t technical-challenges-stress-tes .
+docker build -t technical-challenges-stress-test .
 ```
 
 #### 2) Após a imagem ser construída, podemos executar a imagem com docker run, por exemplo:
 
 ```bash
-docker run technical-challenges-stress-tes --url=http://globo.com --requests=1000 --concurrency=10
+docker run technical-challenges-stress-test --url=http://globo.com --requests=1000 --concurrency=10
 ```
 
 #### 2.1) Os parâmetros são:

@@ -1,6 +1,6 @@
 # Stress Test
 
-# Como executar
+## Como executar
 
 #### 1) Construa a imagem docker
 ```bash

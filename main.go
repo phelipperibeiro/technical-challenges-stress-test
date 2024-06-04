@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -87,8 +88,13 @@ func runLoadTest(url string, requests, concurrency int) {
 			defer mutex.Unlock()       // Desbloqueia o Mutex ao finalizar.
 
 			if err != nil {
-				handleError(err, statusCodes) // Trata o erro, se houver.
+				fmt.Printf("Request error: %v\n", err) // Imprime o erro.
+				handleError(err, statusCodes)          // Trata o erro, se houver.
 			} else {
+				if resp.StatusCode == 500 {
+					body, _ := ioutil.ReadAll(resp.Body)
+					fmt.Printf("Server error: %s\n", body) // Imprime o corpo da resposta.
+				}
 				processResponse(resp, statusCodes) // Processa a resposta.
 			}
 			totalRequests++ // Incrementa o contador de solicitações totais.

@@ -1,6 +1,12 @@
 # Use the official Golang image
 FROM golang:1.22 as builder
 
+# Instalar os certificados raiz
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
+
+# Atualizar os certificados
+RUN update-ca-certificates
+
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
@@ -16,6 +22,9 @@ RUN CGO_ENABLED=0 GOOS=linux COARCH=amd64 go build -o main main.go
 # Use a minimal Docker image to run the Go app
 FROM scratch
 
+# Copiar os certificados raiz para a nova imagem
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/main .
 
@@ -23,5 +32,6 @@ COPY --from=builder /app/main .
 ENTRYPOINT ["./main"]
 
 
-# docker build -t technical-challenges-stress-tes .
-# docker run technical-challenges-stress-tes --url=http://globo.com --requests=1000 --concurrency=10
+# docker build --no-cache  -t technical-challenges-stress-tes .
+# docker run technical-challenges-stress-tes --url=http://globo.com --requests=30 --concurrency=20
+# docker run technical-challenges-stress-tes --url=http://fullcycle.com.br --requests=1000 --concurrency=100
